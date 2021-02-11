@@ -9,9 +9,11 @@ var backgroundImg,platform;
 var bird, slingshot;
 
 var gameState = "onSling";
+var score = 0; 
 
 function preload() {
     backgroundImg = loadImage("sprites/bg.png");
+    getTime();
 }
 
 function setup(){
@@ -45,18 +47,25 @@ function setup(){
 }
 
 function draw(){
+    if(backgroundImg)
     background(backgroundImg);
+    fill(255);
+    textSize(35);
+    noStroke();
+    text("Score: "+ score, width-200, 50);
     Engine.update(engine);
     //strokeWeight(4);
     box1.display();
     box2.display();
     ground.display();
     pig1.display();
+    pig1.score();
     log1.display();
 
     box3.display();
     box4.display();
     pig3.display();
+    pig3.score();
     log3.display();
 
     box5.display();
@@ -84,5 +93,21 @@ function mouseReleased(){
 function keyPressed(){
     if(keyCode === 32){
        // slingshot.attach(bird.body);
+ }
+}
+async function getTime(){
+    var response = await fetch("http://worldtimeapi.org/api/timezone/Asia/Kolkata");
+    var responseJSON = await response.json();
+    console.log(responseJSON);
+    var dt = responseJSON.datetime;
+    var hour = dt.slice (11,13);
+    console.log(hour);
+    if(hour >= 06 && hour <= 18){
+        bg = "sprites/bg.png";
     }
+    else{
+        bg = "sprites/bg2.jpg";
+    }
+    backgroundImg = loadImage(bg);
+    console.log(backgroundImg);
 }
